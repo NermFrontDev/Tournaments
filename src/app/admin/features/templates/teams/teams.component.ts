@@ -1,33 +1,41 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ApiResponse } from 'src/app/interfaces/api.interface';
-import { CreateTeam, EditTeam, Team as Team_ } from 'src/app/interfaces/teams.interface';
+import { CreateTeam, EditTeam, Team } from 'src/app/interfaces/teams.interface';
 import { TeamsService } from 'src/app/services/teams.service';
 
 type TeamStatus = 'Active' | 'Suspended' | 'Disqualified' | 'Inactive';
 
 @Component({
   standalone: true,
-  selector: 'app-volleyball-team-form',
-  imports: [FormsModule, CommonModule],
-  templateUrl: './volleyball-team-form.component.html',
-  styleUrls: ['./volleyball-team-form.component.scss']
+  selector: 'app-teams',
+  templateUrl: './teams.component.html',
+  styleUrls: ['./teams.component.scss'],
+  imports: [CommonModule, FormsModule],
 })
-export class VolleyballTeamFormComponent {
+export class TeamsComponent {
+  sportId = signal<number>(0);
+  sportName = signal<string>('');
 
-  public teams = signal<Team_[]>([]);
+  public teams = signal<Team[]>([]);
 
+  private readonly route = inject(ActivatedRoute);
   private readonly teamsService = inject(TeamsService)
 
   ngOnInit(): void {
-    this.loadTeams()
+    this.route.data.subscribe(data => {
+      this.sportId.set(data['sportId']);
+      this.sportName.set(data['sport']);
+      this.loadTeams();
+    });
   }
 
   private loadTeams(): void {
     this.teamsService.getAllTeams().subscribe({
-      next: (response: ApiResponse<Team_[]>) => {
+      next: (response: ApiResponse<Team[]>) => {
         this.teams.set(response.data)
       },
       error: (error: HttpErrorResponse) => {
@@ -63,7 +71,7 @@ export class VolleyballTeamFormComponent {
   registerSubmitted = false;
 
   // ── Edit ────────────────────────────────────────────────────────────────────
-  editingTeam: Team_ | null = null;
+  editingTeam: Team | null = null;
   editForm: EditTeam = {
     id: 0,
     name: '',
@@ -76,7 +84,7 @@ export class VolleyballTeamFormComponent {
   editSubmitted = false;
 
   // ── Computed ────────────────────────────────────────────────────────────────
-  get filteredTeams(): Team_[] {
+  get filteredTeams(): Team[] {
     const q = this.searchQuery.toLowerCase();
     if (!q) return this.teams();
     return this.teams().filter(
@@ -128,7 +136,7 @@ export class VolleyballTeamFormComponent {
   }
 
   // ── Edit actions ────────────────────────────────────────────────────────────
-  openEditModal(team: Team_): void {
+  openEditModal(team: Team): void {
     this.editingTeam = team;
     this.editForm = {
       id: team.id,
@@ -196,7 +204,6 @@ export class VolleyballTeamFormComponent {
         alert('Algo salió mal')
       },
       complete: () => {
-
       },
     })
   }

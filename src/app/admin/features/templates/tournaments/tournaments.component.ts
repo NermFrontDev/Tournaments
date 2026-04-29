@@ -7,18 +7,21 @@ import { CreateTeam, EditTeam, Team } from 'src/app/interfaces/teams.interface';
 import { CreateTournament, EditTournament, RegisteredTeam, Tournament } from 'src/app/interfaces/tournament.interface';
 import { TournamentService } from 'src/app/services/tournament.service';
 import { TeamsService } from 'src/app/services/teams.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
   standalone: true,
-  selector: 'app-basketball-tournaments-form',
+  selector: 'app-tournaments',
   imports: [CommonModule, FormsModule],
-  templateUrl: './basketball-tournaments-form.component.html',
-  styleUrls: ['./basketball-tournaments-form.component.scss'],
+  templateUrl: './tournaments.component.html',
+  styleUrls: ['./tournaments.component.scss']
 })
-export class basketballTournamentsFormComponent {
+export class TournamentsComponent {
   private readonly tournamentService = inject(TournamentService)
   private readonly teamsService = inject(TeamsService)
+  sportId = signal<number>(0);
+  sportName = signal<string>('');
   public tournament = signal<Tournament[]>([]);
   public tournamentDetails = signal<Tournament[]>([]);
   public teams = signal<Team[]>([]);
@@ -26,7 +29,7 @@ export class basketballTournamentsFormComponent {
   registerSubmitted = false;
   registerForm: CreateTournament = {
     id: 0,
-    sport_id: 3,
+    sport_id: this.sportId(),
     name: '',
     description: '',
     format: '',
@@ -36,20 +39,26 @@ export class basketballTournamentsFormComponent {
   };
   tournamentName: string = ''
   private router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
   editForm: EditTournament = {
     id: 0,
     name: '',
     start_date: ''
   };
   editingTournament: any;
-  name: string = ''
+  name?: string = ''
   editSubmitted = false;
   registeredTeams = signal<RegisteredTeam[]>([])
   teamToRegister: any
   currentTournament: number = -1
 
   ngOnInit(): void {
-    this.loadTournaments()
+    this.route.data.subscribe(data => {
+      this.sportId.set(data['sportId']);
+      this.sportName.set(data['sport']);
+      this.loadTournaments()
+    });
   }
 
 
@@ -63,7 +72,7 @@ export class basketballTournamentsFormComponent {
   }
 
   loadTournaments() {
-    this.tournamentService.getAllTournaments(3).subscribe({
+    this.tournamentService.getAllTournaments(this.sportId()).subscribe({
       next: (response: ApiResponse<Tournament[]>) => {
         this.tournament.set(response.data)
       },
@@ -128,7 +137,11 @@ export class basketballTournamentsFormComponent {
     }
   }
   irAlTorneo(id: number) {
-    this.router.navigate(['admin/basketball/matches', id]);
+    // Aquí puedes poner cualquier otra lógica que necesites antes de navegar
+    console.log('Preparando todo para ir al torneo:', id);
+
+    // Y finalmente hacemos el cambio de pantalla
+    this.router.navigate(['admin/soccer/matches', id]);
   }
   deleteTournament(id: number): void {
     this.tournamentService.delete(id).subscribe({
@@ -152,7 +165,7 @@ export class basketballTournamentsFormComponent {
       start_date: '',
       format: 'bracket',
       location: '.',
-      sport_id: 3,
+      sport_id: this.sportId(),
     };
     this.registerSubmitted = false;
   }
@@ -285,5 +298,4 @@ export class basketballTournamentsFormComponent {
 
     return `${year}-${month}-${day}`;
   }
-
 }

@@ -1,0 +1,278 @@
+<div class="overview">
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <div class="overview__header d-flex align-items-start justify-content-between">
+    <div>
+      <h2 class="overview__title">Soccer Overview</h2>
+      <p class="overview__subtitle">Welcome to the main admin control center for Soccer.</p>
+    </div>
+    <button class="btn-download">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" y1="15" x2="12" y2="3" />
+      </svg>
+      Download Report
+    </button>
+  </div>
+
+  <!-- ── Summary Cards ────────────────────────────────────────────────────── -->
+  <div class="row g-3 mb-4">
+
+    <div class="col-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-card__icon stat-card__icon--teams">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+        </div>
+        <div>
+          <p class="stat-card__label">Total Teams</p>
+          <div class="d-flex align-items-center gap-2">
+            <span class="stat-card__value">{{ totalTeams }}</span>
+            <span class="stat-card__trend stat-card__trend--up">↑ +12%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-card__icon stat-card__icon--matches">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+            <path d="M2 12h20" />
+          </svg>
+        </div>
+        <div>
+          <p class="stat-card__label">Matches Played</p>
+          <span class="stat-card__value">{{ matchesPlayed }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-card__icon stat-card__icon--pending">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+        </div>
+        <div>
+          <p class="stat-card__label">Pending Matches</p>
+          <span class="stat-card__value">{{ pendingMatches }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-card__icon stat-card__icon--goals">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+            <polyline points="17 6 23 6 23 12" />
+          </svg>
+        </div>
+        <div>
+          <p class="stat-card__label">Total Goals</p>
+          <div class="d-flex align-items-center gap-2">
+            <span class="stat-card__value">{{ totalGoals }}</span>
+            <span class="stat-card__trend stat-card__trend--up">↑ +5%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Main Grid ─────────────────────────────────────────────────────────── -->
+  <div class="row g-3">
+
+    <!-- Team Cards -->
+    <div class="col-lg-8">
+      <div class="section-card">
+        <div class="section-card__header">
+          <h3 class="section-card__title">Team Statistics</h3>
+          <span class="section-card__count">{{ teams.length }} teams</span>
+        </div>
+
+        <div class="d-flex flex-column gap-3">
+          <div *ngFor="let team of teams" class="team-card">
+
+            <!-- Team Header -->
+            <div class="team-card__header">
+              <div class="d-flex align-items-center gap-3">
+                <div class="team-card__avatar">
+                  {{ team.name.charAt(0) }}
+                </div>
+                <div>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="team-card__name">{{ team.name }}</span>
+                    <span class="rank-badge" [class.rank-badge--gold]="teamRank(team) === 1"
+                      [class.rank-badge--silver]="teamRank(team) === 2"
+                      [class.rank-badge--bronze]="teamRank(team) === 3">
+                      #{{ teamRank(team) }}
+                    </span>
+                  </div>
+                  <span class="team-card__coach">Coach: {{ team.coach }}</span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="team-card__points">{{ team.points }} pts</span>
+                <span class="status-badge" [class.status-badge--active]="team.status === 'Active'"
+                  [class.status-badge--suspended]="team.status === 'Suspended'"
+                  [class.status-badge--disqualified]="team.status === 'Disqualified'"
+                  [class.status-badge--inactive]="team.status === 'Inactive'">
+                  {{ team.status }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="team-card__stats">
+
+              <div class="stat-pill stat-pill--played">
+                <span class="stat-pill__value">{{ team.played }}</span>
+                <span class="stat-pill__label">Played</span>
+              </div>
+
+              <div class="stat-pill stat-pill--won">
+                <span class="stat-pill__value">{{ team.won }}</span>
+                <span class="stat-pill__label">Won</span>
+              </div>
+
+              <div class="stat-pill stat-pill--drawn">
+                <span class="stat-pill__value">{{ team.drawn }}</span>
+                <span class="stat-pill__label">Drawn</span>
+              </div>
+
+              <div class="stat-pill stat-pill--lost">
+                <span class="stat-pill__value">{{ team.lost }}</span>
+                <span class="stat-pill__label">Lost</span>
+              </div>
+
+              <div class="stat-pill stat-pill--goals">
+                <span class="stat-pill__value">{{ team.goalsFor }}/{{ team.goalsAgainst }}</span>
+                <span class="stat-pill__label">GF / GA</span>
+              </div>
+
+              <div class="stat-pill" [class.stat-pill--pos]="goalDiff(team) > 0"
+                [class.stat-pill--neg]="goalDiff(team) < 0">
+                <span class="stat-pill__value">{{ goalDiff(team) > 0 ? '+' : '' }}{{ goalDiff(team) }}</span>
+                <span class="stat-pill__label">Goal Diff</span>
+              </div>
+
+            </div>
+
+            <!-- Win rate bar -->
+            <div class="team-card__winrate">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="winrate-label">Win rate</span>
+                <span class="winrate-pct">{{ winRate(team) }}%</span>
+              </div>
+              <div class="winrate-bar">
+                <div class="winrate-bar__fill" [style.width.%]="winRate(team)"
+                  [class.winrate-bar__fill--high]="winRate(team) >= 60"
+                  [class.winrate-bar__fill--mid]="winRate(team) >= 40 && winRate(team) < 60"
+                  [class.winrate-bar__fill--low]="winRate(team) < 40">
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-lg-4">
+      <div class="section-card">
+        <div class="section-card__header">
+          <h3 class="section-card__title">Quick Actions</h3>
+        </div>
+
+        <div class="d-flex flex-column gap-2">
+
+          <button class="quick-action" (click)="goToTeams()">
+            <div class="quick-action__icon quick-action__icon--team">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <line x1="19" y1="8" x2="19" y2="14" />
+                <line x1="22" y1="11" x2="16" y2="11" />
+              </svg>
+            </div>
+            <div class="quick-action__text">
+              <span class="quick-action__label">Register New Team</span>
+              <span class="quick-action__desc">Add a team to the tournament</span>
+            </div>
+            <svg class="quick-action__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+
+          <button class="quick-action" (click)="goToMatches()">
+            <div class="quick-action__icon quick-action__icon--match">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+            </div>
+            <div class="quick-action__text">
+              <span class="quick-action__label">Schedule Match</span>
+              <span class="quick-action__desc">Set up a new match between teams</span>
+            </div>
+            <svg class="quick-action__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Standings mini table -->
+      <div class="section-card mt-3">
+        <div class="section-card__header">
+          <h3 class="section-card__title">Standings</h3>
+        </div>
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Team</th>
+              <th>W</th>
+              <th>D</th>
+              <th>L</th>
+              <th>Pts</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let team of teams | slice:0:5" [class.standings-table__row--top]="teamRank(team) === 1">
+              <td>
+                <span class="rank-badge rank-badge--sm" [class.rank-badge--gold]="teamRank(team) === 1"
+                  [class.rank-badge--silver]="teamRank(team) === 2" [class.rank-badge--bronze]="teamRank(team) === 3">
+                  {{ teamRank(team) }}
+                </span>
+              </td>
+              <td class="standings-table__name">{{ team.name }}</td>
+              <td class="standings-table__won">{{ team.won }}</td>
+              <td>{{ team.drawn }}</td>
+              <td class="standings-table__lost">{{ team.lost }}</td>
+              <td class="standings-table__pts">{{ team.points }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>

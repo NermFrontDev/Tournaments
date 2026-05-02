@@ -1,28 +1,33 @@
-import { Component, ElementRef, HostListener, OnInit, signal, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ElementRef, HostListener, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { CommonModule, } from '@angular/common';
 import * as d3 from 'd3';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BracketService } from 'src/app/services/bracket.service';
 import { TournamentBracket, Match } from 'src/app/interfaces/brackets.interface';
-import { TournamentService } from 'src/app/services/tournament.service';
-import { ApiResponse } from 'src/app/interfaces/api.interface';
-import { Tournament } from 'src/app/interfaces/tournament.interface';
 import { FormsModule } from '@angular/forms';
+import { TournamentService } from 'src/app/services/tournament.service';
+import { Tournament } from 'src/app/interfaces/tournament.interface';
+import { ApiResponse } from 'src/app/interfaces/api.interface';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs';
 
+type SportName = 'soccer' | 'volleyball' | 'basketball';
 @Component({
   standalone: true,
-  selector: 'app-basket-bracket-view',
-  imports: [CommonModule, FormsModule],
-  templateUrl: './basket-bracket-view.component.html',
-  styleUrls: ['./basket-bracket-view.component.scss']
+  selector: 'app-tournament-brackets',
+  templateUrl: './tournament-brackets.component.html',
+  styleUrls: ['./tournament-brackets.component.scss'],
+  imports: [FormsModule, CommonModule]
 })
-export class BasketBracketViewComponent {
+export class TournamentBracketsComponent {
   tournamentData: TournamentBracket | null = null;
   loading = true;
   error: string | null = null;
   public tournaments = signal<Tournament[]>([]);
   private _containerRef!: ElementRef<HTMLDivElement>;
   private _overlayRef!: ElementRef<SVGSVGElement>;
+  private route = inject(ActivatedRoute);
 
   @ViewChild('bracketContainer') set bracketContainer(el: ElementRef<HTMLDivElement>) {
     if (el) { this._containerRef = el; this.tryDrawLines(); }
@@ -32,18 +37,33 @@ export class BasketBracketViewComponent {
     if (el) { this._overlayRef = el; this.tryDrawLines(); }
   }
 
-  tournamentId = -1;
-
+  tournamentId: number = 0;
+  sportId: number = 0
+  sport = toSignal(
+    this.route.paramMap.pipe(
+      map(params => params.get('sport') ?? '')
+    )
+  );
   constructor(private bracketService: BracketService, private tournamentService: TournamentService) { }
 
   ngOnInit(): void {
-    this.loadBracket();
+    this.sportId = this.getSportId()
     this.loadTournaments()
+    this.loadBracket();
   }
 
   @HostListener('window:resize')
   onResize(): void { this.drawLines(); }
-
+  getSportId(): number {
+    const currentSport = this.sport();
+    const sportIds: Record<string, number> = {
+      'soccer': 1,
+      'volleyball': 2,
+      'basketball': 3
+    };
+    if (!currentSport) return 0;
+    return sportIds[currentSport];
+  }
   loadBracket(): void {
     this.loading = true;
     this.bracketService.getBracket(this.tournamentId).subscribe({
@@ -60,10 +80,9 @@ export class BasketBracketViewComponent {
   }
 
   loadTournaments() {
-    this.tournamentService.getAllTournaments(3).subscribe({
+    this.tournamentService.getAllTournaments(this.sportId).subscribe({
       next: (response: ApiResponse<Tournament[]>) => {
         this.tournaments.set(response.data)
-        console.log(this.tournaments)
       },
       error: (error: HttpErrorResponse) => {
 
@@ -74,7 +93,6 @@ export class BasketBracketViewComponent {
     })
 
   }
-
 
   private tryDrawLines(): void {
     if (this.tournamentData) {

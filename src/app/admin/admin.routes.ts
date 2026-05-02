@@ -31,10 +31,10 @@ export const ADMIN_ROUTES: Routes = [
           }, */
           {
             path: 'teams',
-            data: { sport: 'soccer' },
+            data: { sportId: 1, sport: 'soccer' },
             loadComponent: () =>
-              import('../admin/features/soccer/teams/soccer-team-form/soccer-team-form.component')
-                .then(m => m.SoccerTeamFormComponent),
+              import('../admin/features/templates/teams/teams.component')
+                .then(m => m.TeamsComponent),
           },
           {
             path: 'matches/:id',
@@ -45,10 +45,10 @@ export const ADMIN_ROUTES: Routes = [
           },
           {
             path: 'tournaments',
-            data: { sport: 'soccer' },
+            data: { sportId: 1, sport: 'soccer' },
             loadComponent: () =>
-              import('./features/soccer/tournaments/soccer-tournaments-form.component')
-                .then(m => m.soccerTournamentsFormComponent),
+              import('./features/templates/tournaments/tournaments.component')
+                .then(m => m.TournamentsComponent),
           },
         ],
       },
@@ -69,10 +69,10 @@ export const ADMIN_ROUTES: Routes = [
           }, */
           {
             path: 'teams',
-            data: { sport: 'volleyball' },
+            data: { sportId: 2, sport: 'volleyball' },
             loadComponent: () =>
-              import('./features/volleyball/teams/volleyball-team-form/volleyball-team-form.component')
-                .then(m => m.VolleyballTeamFormComponent),
+              import('../admin/features/templates/teams/teams.component')
+                .then(m => m.TeamsComponent),
           },
           {
             path: 'matches/:id',
@@ -83,10 +83,10 @@ export const ADMIN_ROUTES: Routes = [
           },
           {
             path: 'tournaments',
-            data: { sport: 'volleyball' },
+            data: { sportId: 2, sport: 'volleyball' },
             loadComponent: () =>
-              import('./features/volleyball/tournaments/volleyball-tournaments-form.component')
-                .then(m => m.volleyballTournamentsFormComponent),
+              import('./features/templates/tournaments/tournaments.component')
+                .then(m => m.TournamentsComponent),
           },
         ],
       },
@@ -107,10 +107,10 @@ export const ADMIN_ROUTES: Routes = [
           }, */
           {
             path: 'teams',
-            data: { sport: 'basketball' },
+            data: { sportId: 3, sport: 'basketball' },
             loadComponent: () =>
-              import('./features/basketball/teams/basketball-team-form/basketball-team-form.component')
-                .then(m => m.BasketballTeamFormComponent),
+              import('../admin/features/templates/teams/teams.component')
+                .then(m => m.TeamsComponent),
           },
           {
             path: 'matches/:id',
@@ -121,10 +121,10 @@ export const ADMIN_ROUTES: Routes = [
           },
           {
             path: 'tournaments',
-            data: { sport: 'basketball' },
+            data: { sportId: 3, sport: 'basketball' },
             loadComponent: () =>
-              import('./features/basketball/tournaments/basketball-tournaments-form.component')
-                .then(m => m.basketballTournamentsFormComponent),
+              import('./features/templates/tournaments/tournaments.component')
+                .then(m => m.TournamentsComponent),
           },
         ],
       },

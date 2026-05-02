@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SoccerPositionTableComponent } from '../../../../../shared/components/tables/soccer-position-table/soccer-position-table.component';
-import { SoccerBracketViewComponent } from '../../../../../shared/components/bracket/soccer-bracket-view/soccer-bracket-view.component';
+import { TournamentTableComponent } from 'src/app/end-user/layout/tournament-table/tournament-table.component';
+import { TournamentBracketsComponent } from 'src/app/end-user/layout/tournament-brackets/tournament-brackets.component';
 
 @Component({
   standalone: true,
   selector: 'app-soccer-matches',
   imports: [
     CommonModule,
-    SoccerPositionTableComponent,
-    SoccerBracketViewComponent],
+    TournamentTableComponent,
+    TournamentBracketsComponent
+  ],
   templateUrl: './soccer-matches.component.html',
   styleUrls: ['./soccer-matches.component.scss']
 })

@@ -1,17 +1,22 @@
 <div class="tabs-container d-flex justify-content-center">
   <div class="tabs-pill d-flex">
-
-    <button class="tab-btn" [class.active]="activeTab === 'posTableView'" (click)="setTab('posTableView')">
+    <button
+      class="tab-btn"
+      [class.active]="activeTab === 'posTableView'"
+      (click)="setTab('posTableView')"
+    >
       Tabla de posiciones
     </button>
 
-    <button class="tab-btn" [class.active]="activeTab === 'bracketView'" (click)="setTab('bracketView')">
+    <button
+      class="tab-btn"
+      [class.active]="activeTab === 'bracketView'"
+      (click)="setTab('bracketView')"
+    >
       Brackets
     </button>
-
   </div>
 </div>
-
 
 <!-- <div class="custom-tabs d-flex">
   <button
@@ -43,9 +48,12 @@
   </ng-container>
 </div> -->
 
-
 <!-- Contenido dinámico -->
 <div class="mt-4">
-  <app-volley-position-table *ngIf="activeTab === 'posTableView'"></app-volley-position-table>
-  <app-volley-bracket-view *ngIf="activeTab === 'bracketView'"></app-volley-bracket-view>
+  <app-tournament-table
+    *ngIf="activeTab === 'posTableView'"
+  ></app-tournament-table>
+  <app-tournament-brackets
+    *ngIf="activeTab === 'bracketView'"
+  ></app-tournament-brackets>
 </div>

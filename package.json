@@ -4,8 +4,8 @@
   
 "scripts": {
   "ng": "ng",
-  "start": "nx serve",
-  "build": "nx build",
+  "start": "ng serve",
+  "build": "ng build",
   "build:api": "tsc -p api/tsconfig.json",
   "start:api": "node api/dist/index.js",
   "dev": "concurrently -n \"ANGULAR,EXPRESS\" -c \"cyan,green\" \"npm run start\" \"npm run start:api\"",

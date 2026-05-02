@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BasketBracketViewComponent } from '../../../../../shared/components/bracket/basket-bracket-view/basket-bracket-view.component';
-import { BasketPositionTableComponent } from '../../../../../shared/components/tables/basket-position-table/basket-position-table.component';
+import { TournamentBracketsComponent } from 'src/app/end-user/layout/tournament-brackets/tournament-brackets.component';
+import { TournamentTableComponent } from 'src/app/end-user/layout/tournament-table/tournament-table.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,8 +9,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-basketball-matches',
   imports: [
     CommonModule,
-    BasketPositionTableComponent,
-    BasketBracketViewComponent
+    TournamentBracketsComponent,
+    TournamentTableComponent
   ],
   templateUrl: './basketball-matches.component.html',
   styleUrls: ['./basketball-matches.component.scss']

@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { VolleyBracketViewComponent } from '../../../../../shared/components/bracket/volley-bracket-view/volley-bracket-view.component';
-import { VolleyPositionTableComponent } from '../../../../../shared/components/tables/volley-position-table/volley-position-table.component';
 import { CommonModule } from '@angular/common';
+import { TournamentBracketsComponent } from 'src/app/end-user/layout/tournament-brackets/tournament-brackets.component';
+import { TournamentTableComponent } from 'src/app/end-user/layout/tournament-table/tournament-table.component';
 
 @Component({
   standalone: true,
   selector: 'app-volleyball-matches',
   imports: [
     CommonModule,
-    VolleyBracketViewComponent,
-    VolleyPositionTableComponent
+    TournamentTableComponent,
+    TournamentBracketsComponent
   ],
   templateUrl: './volleyball-matches.component.html',
   styleUrls: ['./volleyball-matches.component.scss']

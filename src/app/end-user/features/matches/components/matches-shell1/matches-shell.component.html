@@ -1,0 +1,46 @@
+<div class="tabs-container d-flex justify-content-center">
+  <div class="tabs-pill d-flex">
+    <button
+      class="tab-btn"
+      [class.active]="activeTab() === 'posTableView'"
+      (click)="setTab('posTableView')"
+    >
+      Tabla de posiciones
+    </button>
+    <button
+      class="tab-btn"
+      [class.active]="activeTab() === 'bracketView'"
+      (click)="setTab('bracketView')"
+    >
+      Brackets
+    </button>
+  </div>
+</div>
+<!-- Selector de torneos (controlado por el padre) -->
+<div style="margin: 20px 0">
+  <select
+    class="form-field__input"
+    style="margin-right: 10px"
+    [ngModel]="selectedTournamentId()"
+    (ngModelChange)="setTournament($event)"
+  >
+    <option value="0" disabled selected>Selecciona un torneo</option>
+    <option *ngFor="let tournament of tournaments()" [value]="tournament.id">
+      {{ tournament.name }}
+    </option>
+  </select>
+</div>
+<!-- Tabla de posiciones (recibe sportId y tournamentId como @Input) -->
+<div class="mt-4">
+  <app-tournament-table
+    *ngIf="activeTab() === 'posTableView'"
+    [sportId]="sportId()"
+    [tournamentId]="selectedTournamentId()"
+  ></app-tournament-table>
+  <!-- Brackets (recibe sportId y tournamentId como @Input) -->
+  <app-tournament-brackets
+    *ngIf="activeTab() === 'bracketView'"
+    [sportId]="sportId()"
+    [tournamentId]="selectedTournamentId()"
+  ></app-tournament-brackets>
+</div>

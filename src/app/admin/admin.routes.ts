@@ -33,7 +33,7 @@ export const ADMIN_ROUTES: Routes = [
             path: 'teams',
             data: { sportId: 1, sport: 'soccer' },
             loadComponent: () =>
-              import('../admin/features/templates/teams/teams.component')
+              import('./components/teams/teams.component')
                 .then(m => m.TeamsComponent),
           },
           {
@@ -47,7 +47,7 @@ export const ADMIN_ROUTES: Routes = [
             path: 'tournaments',
             data: { sportId: 1, sport: 'soccer' },
             loadComponent: () =>
-              import('./features/templates/tournaments/tournaments.component')
+              import('./components/tournaments/tournaments.component')
                 .then(m => m.TournamentsComponent),
           },
         ],
@@ -71,7 +71,7 @@ export const ADMIN_ROUTES: Routes = [
             path: 'teams',
             data: { sportId: 2, sport: 'volleyball' },
             loadComponent: () =>
-              import('../admin/features/templates/teams/teams.component')
+              import('./components/teams/teams.component')
                 .then(m => m.TeamsComponent),
           },
           {
@@ -85,7 +85,7 @@ export const ADMIN_ROUTES: Routes = [
             path: 'tournaments',
             data: { sportId: 2, sport: 'volleyball' },
             loadComponent: () =>
-              import('./features/templates/tournaments/tournaments.component')
+              import('./components/tournaments/tournaments.component')
                 .then(m => m.TournamentsComponent),
           },
         ],
@@ -109,7 +109,7 @@ export const ADMIN_ROUTES: Routes = [
             path: 'teams',
             data: { sportId: 3, sport: 'basketball' },
             loadComponent: () =>
-              import('../admin/features/templates/teams/teams.component')
+              import('./components/teams/teams.component')
                 .then(m => m.TeamsComponent),
           },
           {
@@ -123,7 +123,7 @@ export const ADMIN_ROUTES: Routes = [
             path: 'tournaments',
             data: { sportId: 3, sport: 'basketball' },
             loadComponent: () =>
-              import('./features/templates/tournaments/tournaments.component')
+              import('./components/tournaments/tournaments.component')
                 .then(m => m.TournamentsComponent),
           },
         ],

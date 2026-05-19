@@ -1,0 +1,85 @@
+.tabs-container {
+  width: 100%;
+}
+
+.tabs-pill {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  /* border-radius: var(--radius-lg); */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  padding: 4px;
+  width: 650px;
+}
+
+.tab-btn {
+  flex: 1;
+  border: none;
+  /* background: #ced1ef; */
+  background: transparent;
+  color: #6178d9;
+  padding: 5px 0;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+  background: #6771cc;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  &:hover {
+    color: whitesmoke;
+    background: #6771cc;
+  }
+}
+
+.tab-btn:hover {
+  color: #6178d9;
+  background: #b9bde8;
+}
+
+.form-field__input {
+  /* Espaciado interno para que no se vea apretado */
+  padding: 10px 15px;
+  /* Espacio extra a la derecha para que el texto no pise la flecha */
+  padding-right: 40px; 
+  font-size: 16px;
+  font-family: inherit;
+  color: #333;
+  background-color: #f9f9f9;
+  
+  /* Un borde sutil y esquinas redondeadas */
+  border: 2px solid #ccc;
+  border-radius: 8px; 
+  cursor: pointer;
+  outline: none;
+  
+  /* Transición suave para cuando pasas el mouse */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  margin: 20px;
+
+  /* AQUÍ ESTÁ EL TRUCO: Quitar el estilo por defecto del navegador */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* Poner una flechita personalizada usando un SVG en Base64 para no depender de imágenes externas */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px top 50%;
+  background-size: 12px auto;
+}
+
+/* Efecto cuando pasas el mouse por encima */
+.form-field__input:hover {
+  border-color: #999;
+}
+
+/* Efecto cuando le haces clic (focus) */
+.form-field__input:focus {
+  border-color: #66afe9; /* Un color azulito amigable */
+  box-shadow: 0 0 5px rgba(102, 175, 233, 0.5); /* Un resplandor sutil */
+}

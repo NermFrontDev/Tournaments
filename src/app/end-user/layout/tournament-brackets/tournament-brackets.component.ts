@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, Input, OnInit, signal, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import * as d3 from 'd3';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -29,6 +29,10 @@ export class TournamentBracketsComponent {
   private _overlayRef!: ElementRef<SVGSVGElement>;
   private route = inject(ActivatedRoute);
 
+  @Input() sportId: number = 0;
+
+  @Input() tournamentId: number = 0;
+
   @ViewChild('bracketContainer') set bracketContainer(el: ElementRef<HTMLDivElement>) {
     if (el) { this._containerRef = el; this.tryDrawLines(); }
   }
@@ -37,8 +41,6 @@ export class TournamentBracketsComponent {
     if (el) { this._overlayRef = el; this.tryDrawLines(); }
   }
 
-  tournamentId: number = 0;
-  sportId: number = 0
   sport = toSignal(
     this.route.paramMap.pipe(
       map(params => params.get('sport') ?? '')
@@ -47,23 +49,27 @@ export class TournamentBracketsComponent {
   constructor(private bracketService: BracketService, private tournamentService: TournamentService) { }
 
   ngOnInit(): void {
-    this.sportId = this.getSportId()
-    this.loadTournaments()
-    this.loadBracket();
+
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['tournamentId'] && !changes['tournamentId'].firstChange) {
+      if (this.tournamentId > 0) {
+        this.loadBracket();
+      }
+    }
+
+    if (changes['sportId']) {
+      if (this.sportId > 0) {
+        this.loadTournaments();
+      }
+    }
+  }
+
 
   @HostListener('window:resize')
   onResize(): void { this.drawLines(); }
-  getSportId(): number {
-    const currentSport = this.sport();
-    const sportIds: Record<string, number> = {
-      'soccer': 1,
-      'volleyball': 2,
-      'basketball': 3
-    };
-    if (!currentSport) return 0;
-    return sportIds[currentSport];
-  }
+
   loadBracket(): void {
     this.loading = true;
     this.bracketService.getBracket(this.tournamentId).subscribe({

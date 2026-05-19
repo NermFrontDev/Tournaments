@@ -1,78 +1,88 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  Input,
+  signal,
+  effect,
+  SimpleChanges,
+  OnChanges 
+} from '@angular/core';
 import { ApiResponse } from 'src/app/interfaces/api.interface';
 import { Standings, Tournament } from 'src/app/interfaces/tournament.interface';
 import { ResultTableService } from 'src/app/services/result-table.service';
 import { TournamentService } from 'src/app/services/tournament.service';
-import { FormsModule } from '@angular/forms';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-
 
 @Component({
   standalone: true,
   selector: 'app-tournament-table',
   templateUrl: './tournament-table.component.html',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   styleUrls: ['./tournament-table.component.scss']
 })
-export class TournamentTableComponent {
-  private route = inject(ActivatedRoute);
-  tournamentId: number = -1;
-  sportId: number = -1
-  sport = toSignal(
-    this.route.paramMap.pipe(
-      map(params => params.get('sport') ?? '')
-    )
-  );
-  standingData: Standings[] = []
-  public tournaments = signal<Tournament[]>([]);
+export class TournamentTableComponent{
 
-  constructor(private resultTableService: ResultTableService, private tournamentService: TournamentService) { }
+  private resultTableService = inject(ResultTableService);
+  private tournamentService = inject(TournamentService);
 
-  ngOnInit() {
-    this.sportId = this.getSportId()
-    this.loadTable()
-    this.loadTournaments()
+  @Input() sportId: number = 0;
+  @Input() tournamentId: number = 0;
+
+  standingData = signal<Standings[]>([]);
+  tournaments = signal<Tournament[]>([]);
+  isLoading = signal<boolean>(false);
+  error = signal<string | null>(null);
+
+  constructor() {
+  
   }
 
-  getSportId(): number {
-    const currentSport = this.sport();
-    const sportIds: Record<string, number> = {
-      'soccer': 1,
-      'volleyball': 2,
-      'basketball': 3
-    };
-    if (!currentSport) return 0;
-    return sportIds[currentSport];
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['tournamentId'] && !changes['tournamentId'].firstChange) {
+      if (this.tournamentId > 0) {
+        this.loadTable();
+      }
+    }
+
+    if (changes['sportId']) {
+      if (this.sportId > 0) {
+        this.loadTournaments();
+      }
+    }
   }
 
-  loadTable() {
+  loadTable(): void {
+    if (this.tournamentId <= 0) return;
+    this.isLoading.set(true);
+    this.error.set(null);
+    console.log(this.tournamentId)
     this.resultTableService.getStanding(this.tournamentId).subscribe({
       next: (response: ApiResponse<Standings[]>) => {
-        this.standingData = response.data;
-
-      },
-      error: () => {
-        /* alert('Algo salio mal') */
-      },
-    });
-  }
-  loadTournaments() {
-    this.tournamentService.getAllTournaments(this.sportId).subscribe({
-      next: (response: ApiResponse<Tournament[]>) => {
-        this.tournaments.set(response.data)
+        this.standingData.set(response.data);
+        console.log(this.standingData())
+        this.isLoading.set(false);
       },
       error: (error: HttpErrorResponse) => {
-
-      },
-      complete: () => {
-
-      },
-    })
-
+        console.error('Error cargando tabla:', error);
+        this.error.set('No se pudo cargar la tabla de posiciones');
+        this.isLoading.set(false);
+      }
+    });
   }
 
+  /**
+   * Carga los torneos disponibles para el deporte actual
+   */
+  loadTournaments(): void {
+    if (this.sportId <= 0) return;
+    this.tournamentService.getAllTournaments(this.sportId).subscribe({
+      next: (response: ApiResponse<Tournament[]>) => {
+        this.tournaments.set(response.data);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error cargando torneos:', error);
+      }
+    });
+  }
 }

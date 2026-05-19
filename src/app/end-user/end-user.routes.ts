@@ -9,7 +9,7 @@ export const END_USER_ROUTES: Routes = [
   {
     path: ':sport',
     loadComponent: () =>
-      import('./features/matches/components/matches-shell1/matches-shell.component')
+      import('./features/matches/components/soccer-matches/matches-shell.component')
         .then(m => m.SoccerMatchesComponent)
   }
 ];

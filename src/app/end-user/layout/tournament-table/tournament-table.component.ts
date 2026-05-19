@@ -56,10 +56,11 @@ export class TournamentTableComponent{
     if (this.tournamentId <= 0) return;
     this.isLoading.set(true);
     this.error.set(null);
-
+    console.log(this.tournamentId)
     this.resultTableService.getStanding(this.tournamentId).subscribe({
       next: (response: ApiResponse<Standings[]>) => {
         this.standingData.set(response.data);
+        console.log(this.standingData())
         this.isLoading.set(false);
       },
       error: (error: HttpErrorResponse) => {

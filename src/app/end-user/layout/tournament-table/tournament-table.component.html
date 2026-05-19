@@ -14,7 +14,7 @@
     </div>
  
     <!-- Content -->
-    <div *ngIf="!isLoading() && !error() && standingData.length > 0">
+    <div *ngIf="!isLoading() && !error() && standingData().length > 0">
       <div class="tabla-wrapper">
         <table class="table table-hover align-middle mb-0 tabla-scroll">
           <thead>
@@ -31,7 +31,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let team of standingData; let i = index">
+            <tr *ngFor="let team of standingData(); let i = index">
               <td class="sticky-col col-pos">{{ i + 1 }}</td>
               <td class="sticky-col col-team">{{ team.team_name }}</td>
               <td class="text-center">{{ team.played }}</td>
